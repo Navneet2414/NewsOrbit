@@ -5,7 +5,8 @@ const Hero: React.FC = () => {
   return (
     <section className="hero">
       <div className="hero-container">
-        <h2>Welcome to NewsOrbit world</h2>
+        <h2>Welcome to NewsOrbit world </h2>
+        <p>Here You can Get your area Latest News  on Daily Basics</p>
         <p>Your gateway to the latest news and updates from around the world.</p>
         <button className="cta-button">Explore News</button>
       </div>
