@@ -1,4 +1,4 @@
-const TopBar: React.FC = () => {
+const TopBar: React.FC<{ onSignIn?: () => void }> = ({ onSignIn }) => {
   return (
     <header className="sticky top-0 z-30 w-full border-b border-slate-200 bg-white/90 backdrop-blur-md">
       <div className="flex items-center gap-4 px-4 py-3 sm:px-6">
@@ -72,6 +72,7 @@ const TopBar: React.FC = () => {
 
         <button
           type="button"
+          onClick={onSignIn}
           className="inline-flex items-center justify-center rounded-2xl bg-sky-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-500"
         >
           Sign In

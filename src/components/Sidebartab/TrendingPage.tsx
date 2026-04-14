@@ -120,24 +120,28 @@ const accentByCategory: Record<string, string> = {
 }
 
 const NewsCard = ({ item }: { item: NewsItem }) => (
-  <div className="relative overflow-hidden rounded-[24px] shadow-md group cursor-pointer">
-    <img
-      src={item.image}
-      alt={item.title}
-      className="h-48 w-full object-cover transition duration-500 group-hover:scale-[1.03] sm:h-52"
-    />
-    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent" />
-    <div className="absolute inset-0 flex flex-col justify-between p-4">
-      <span className={`self-start rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] ring-1 ${accentByCategory[item.category]}`}>
-        {item.category}
-      </span>
-      <div className="space-y-1.5">
-        <h3 className="text-sm font-semibold leading-snug text-white line-clamp-2">{item.title}</h3>
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-white/60">
-          <span className="flex items-center gap-1"><FiClock className="h-3 w-3" />{item.timeLabel}</span>
-          <span className="flex items-center gap-1"><FiHeart className="h-3 w-3" />{item.views}</span>
-          <span>{item.location}</span>
-        </div>
+  <div className="group cursor-pointer overflow-hidden rounded-[24px] bg-white shadow-md transition hover:-translate-y-1 hover:shadow-xl">
+    <div className="overflow-hidden">
+      <img
+        src={item.image}
+        alt={item.title}
+        className="h-48 w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+      />
+    </div>
+    <div className="flex flex-col gap-2 p-4">
+      <div className="flex items-center gap-2">
+        <span className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] ring-1 ${accentByCategory[item.category]}`}>
+          {item.category}
+        </span>
+        <span className="flex items-center gap-1 text-xs text-slate-400">
+          <FiClock className="h-3 w-3" />{item.timeLabel}
+        </span>
+      </div>
+      <h3 className="text-sm font-semibold leading-snug text-slate-900 line-clamp-2">{item.title}</h3>
+      <p className="text-xs leading-5 text-slate-500 line-clamp-2">{item.summary}</p>
+      <div className="flex items-center gap-3 pt-1 text-xs text-slate-400">
+        <span className="flex items-center gap-1"><FiHeart className="h-3 w-3 text-rose-400" />{item.views}</span>
+        <span>{item.location}</span>
       </div>
     </div>
   </div>
@@ -148,7 +152,7 @@ const TrendingPage: React.FC = () => {
   const mostLiked = [...allNews].sort((a, b) => b.views - a.views).slice(0, 4)
 
   return (
-    <div className="space-y-10 px-0">
+    <div className="space-y-10">
       {/* Trending Now */}
       <section>
         <div className="mb-2 flex items-center gap-3">
@@ -161,7 +165,7 @@ const TrendingPage: React.FC = () => {
           <FiZap className="h-4 w-4 shrink-0 text-orange-400" />
           <p className="text-sm font-medium text-slate-500">Hot Right Now — stories everyone's talking about.</p>
         </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {categoryTrending.map((item) => <NewsCard key={item.id} item={item} />)}
         </div>
       </section>
@@ -178,7 +182,7 @@ const TrendingPage: React.FC = () => {
           <FiHeart className="h-4 w-4 shrink-0 text-rose-400" />
           <p className="text-sm font-medium text-slate-500">The most talked about stories across all cities.</p>
         </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {mostLiked.map((item) => <NewsCard key={item.id} item={item} />)}
         </div>
       </section>
