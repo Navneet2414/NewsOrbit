@@ -1,17 +1,15 @@
-import React from 'react'
-import Header from './components/Header'
-import Hero from './components/Hero'
-import FeaturedNews from './components/FeaturedNews'
-import Footer from './components/Footer'
-import './App.css'
+import Sidebar from './components/Sidebar'
+import MainContent from './components/MainContent'
+import TrendingPanel from './components/TrendingPanel'
 
 function App() {
   return (
-    <div className="app">
-      <Header />
-      <Hero />
-      <FeaturedNews />
-      <Footer />
+    <div className="min-h-screen bg-slate-100 text-slate-900 grid grid-cols-1 lg:grid-cols-[18rem_1fr_20rem]">
+      <Sidebar />
+      <MainContent />
+      <aside className="px-4 pb-10 lg:px-6 lg:py-6">
+        <TrendingPanel />
+      </aside>
     </div>
   )
 }
