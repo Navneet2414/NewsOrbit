@@ -32,11 +32,11 @@ export interface UserNotification {
 export const UserApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // Auth
-    userLogin: builder.mutation<{ token: string; user: UserProfile }, { email: string; password: string }>({
-      query: (body) => ({ url: '/user/login', method: 'POST', body }),
+    userLogin: builder.mutation<{ success: boolean; token: string; data: UserProfile }, { email: string; password: string }>({
+      query: (body) => ({ url: '/users/login', method: 'POST', body }),
     }),
-    userRegister: builder.mutation<{ token: string; user: UserProfile }, { name: string; email: string; password: string }>({
-      query: (body) => ({ url: '/user/register', method: 'POST', body }),
+    userRegister: builder.mutation<{ success: boolean; token: string; data: UserProfile }, { name: string; email: string; password: string }>({
+      query: (body) => ({ url: '/users/register', method: 'POST', body }),
     }),
 
     // Profile

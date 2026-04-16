@@ -1,11 +1,15 @@
 import { baseApi } from '../baseApi'
 
 export interface JournalistArticle {
-  id: string
+  _id: string
   title: string
   summary: string
+  content: string
   category: string
+  city: string
   image: string
+  imagekitFileId?: string
+  isPublished: boolean
   status: 'approved' | 'pending' | 'rejected'
   likes: number
   comments: number
@@ -18,63 +22,79 @@ export interface JournalistProfile {
   name: string
   email: string
   beat: string
-  location: string
+  city: string
   bio: string
   followers: number
   articles: number
   verified: boolean
 }
 
+export interface UploadResponse {
+  success: boolean
+  url: string
+  fileId: string
+}
+
 export const JournalistApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // Auth
-    journalistLogin: builder.mutation<{ token: string; journalist: JournalistProfile }, { email: string; password: string }>({
+    journalistLogin: builder.mutation<{ token: string; data: JournalistProfile }, { email: string; password: string }>({
       query: (body) => ({ url: '/journalist/login', method: 'POST', body }),
     }),
 
-    // Articles
+    uploadImage: builder.mutation<UploadResponse, { base64: string; fileName: string; folder?: string }>({
+      query: (body) => ({ url: '/upload', method: 'POST', body }),
+    }),
+
     getMyArticles: builder.query<JournalistArticle[], void>({
-      query: () => '/journalist/articles',
+      query: () => '/journalist/news',
       providesTags: ['Journalist'],
+      transformResponse: (res: { success: boolean; data: JournalistArticle[] }) => res.data,
     }),
+
+    getArticleById: builder.query<JournalistArticle, string>({
+      query: (id) => `/journalist/news/${id}`,
+      providesTags: ['Journalist'],
+      transformResponse: (res: { success: boolean; data: JournalistArticle }) => res.data,
+    }),
+
     createArticle: builder.mutation<JournalistArticle, Partial<JournalistArticle>>({
-      query: (body) => ({ url: '/journalist/articles', method: 'POST', body }),
+      query: (body) => ({ url: '/journalist/news', method: 'POST', body }),
       invalidatesTags: ['Journalist'],
+      transformResponse: (res: { success: boolean; data: JournalistArticle }) => res.data,
     }),
+
     updateArticle: builder.mutation<JournalistArticle, { id: string } & Partial<JournalistArticle>>({
-      query: ({ id, ...body }) => ({ url: `/journalist/articles/${id}`, method: 'PUT', body }),
+      query: ({ id, ...body }) => ({ url: `/journalist/news/${id}`, method: 'PUT', body }),
       invalidatesTags: ['Journalist'],
+      transformResponse: (res: { success: boolean; data: JournalistArticle }) => res.data,
     }),
+
     deleteArticle: builder.mutation<void, string>({
-      query: (id) => ({ url: `/journalist/articles/${id}`, method: 'DELETE' }),
+      query: (id) => ({ url: `/journalist/news/${id}`, method: 'DELETE' }),
       invalidatesTags: ['Journalist'],
     }),
 
-    // Profile
     getJournalistProfile: builder.query<JournalistProfile, void>({
       query: () => '/journalist/profile',
       providesTags: ['Journalist'],
+      transformResponse: (res: { success: boolean; data: JournalistProfile }) => res.data,
     }),
+
     updateJournalistProfile: builder.mutation<JournalistProfile, Partial<JournalistProfile>>({
       query: (body) => ({ url: '/journalist/profile', method: 'PUT', body }),
       invalidatesTags: ['Journalist'],
-    }),
-
-    // Stats
-    getJournalistStats: builder.query<{ totalArticles: number; totalLikes: number; totalViews: number; totalComments: number }, void>({
-      query: () => '/journalist/stats',
-      providesTags: ['Journalist'],
     }),
   }),
 })
 
 export const {
   useJournalistLoginMutation,
+  useUploadImageMutation,
   useGetMyArticlesQuery,
+  useGetArticleByIdQuery,
   useCreateArticleMutation,
   useUpdateArticleMutation,
   useDeleteArticleMutation,
   useGetJournalistProfileQuery,
   useUpdateJournalistProfileMutation,
-  useGetJournalistStatsQuery,
 } = JournalistApi

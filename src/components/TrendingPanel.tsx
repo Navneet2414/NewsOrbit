@@ -1,32 +1,30 @@
+'use client'
+
 import { FiArrowUpRight, FiTrendingUp } from 'react-icons/fi'
-
 import { TrendingItem } from '../types/news'
+import { useGetPublicNewsQuery } from '../features/news/NewsApi'
 
-const trendingItems: TrendingItem[] = [
-  {
-    id: 't1',
-    title: 'City Council Approves New Metro Line Expansion Plan',
-    location: 'Mumbai',
-    timeLabel: '2h ago',
-    likes: 234
-  },
-  {
-    id: 't2',
-    title: 'Police Bust Cybercrime Ring Operating from Tech Hub',
-    location: 'Bengaluru',
-    timeLabel: '3h ago',
-    likes: 156
-  },
-  {
-    id: 't3',
-    title: 'Top IT Firms to Hire 15,000 Freshers in Q2 Recruitment Drive',
-    location: 'Hyderabad',
-    timeLabel: '4h ago',
-    likes: 445
-  }
+const staticTrending: TrendingItem[] = [
+  { id: 't1', title: 'City Council Approves New Metro Line Expansion Plan', location: 'Mumbai', timeLabel: '2h ago', likes: 234 },
+  { id: 't2', title: 'Police Bust Cybercrime Ring Operating from Tech Hub', location: 'Bengaluru', timeLabel: '3h ago', likes: 156 },
+  { id: 't3', title: 'Top IT Firms to Hire 15,000 Freshers in Q2 Recruitment Drive', location: 'Hyderabad', timeLabel: '4h ago', likes: 445 },
 ]
 
 const TrendingPanel: React.FC = () => {
+  const { data: newsPage } = useGetPublicNewsQuery({ page: 1, limit: 10 })
+  const dbNews = newsPage?.data ?? []
+
+  const dbTrending: TrendingItem[] = dbNews.map((n) => ({
+    id:        n._id,
+    title:     n.title,
+    location:  n.city,
+    timeLabel: new Date(n.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }),
+    likes:     n.views ?? 0,
+  }))
+
+  // DB news first, then static, cap at 5
+  const trendingItems = [...dbTrending, ...staticTrending].slice(0, 5)
+
   return (
     <aside className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
       <div className="mb-6 flex items-center gap-3">
@@ -49,11 +47,10 @@ const TrendingPanel: React.FC = () => {
                 </span>
                 <div className="space-y-1">
                   <h4 className="font-semibold leading-snug text-slate-900 line-clamp-2">{item.title}</h4>
-                  <p className="text-sm text-slate-500">{item.location} · {item.likes ?? 0} likes</p>
+                  <p className="text-sm text-slate-500">{item.location} · {item.likes ?? 0} views</p>
                 </div>
               </div>
-
-              <span className="mt-1 inline-flex h-9 w-9 items-center justify-center rounded-2xl border border-transparent text-slate-300 transition group-hover:border-slate-200 group-hover:bg-white group-hover:text-slate-500">
+              <span className="mt-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl border border-transparent text-slate-300 transition group-hover:border-slate-200 group-hover:bg-white group-hover:text-slate-500">
                 <FiArrowUpRight className="h-4 w-4" />
               </span>
             </button>
@@ -65,4 +62,3 @@ const TrendingPanel: React.FC = () => {
 }
 
 export default TrendingPanel
-

@@ -1,21 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowLeft, FiZap } from 'react-icons/fi'
-import { useAuth, Role } from '../../context/AuthContext'
+import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowLeft, FiZap, FiLoader } from 'react-icons/fi'
+import { useAuth } from '../../context/AuthContext'
 import Image from 'next/image'
 import Link from 'next/link'
 
-const CREDENTIALS: Record<string, { password: string; role: NonNullable<Role> }> = {
-  'admin@newsorbit.com':  { password: 'admin123',      role: 'admin' },
-  'priya@newsorbit.com':  { password: 'journalist123', role: 'journalist' },
-  'user@newsorbit.com':   { password: 'user123',       role: 'user' },
-}
-
 const DEMO = [
-  { role: 'Admin',      email: 'admin@newsorbit.com',  pass: 'admin123',      color: 'text-red-400',     dot: 'bg-red-400' },
-  { role: 'Journalist', email: 'priya@newsorbit.com',  pass: 'journalist123', color: 'text-emerald-400', dot: 'bg-emerald-400' },
-  { role: 'User',       email: 'user@newsorbit.com',   pass: 'user123',       color: 'text-sky-400',     dot: 'bg-sky-400' },
+  { role: 'Admin',      email: 'admin@newsorbit.com',  pass: 'NewsOrbit@12345', color: 'text-red-400',     dot: 'bg-red-400' },
+  { role: 'Journalist', email: 'priya@newsorbit.com',  pass: 'NewsOrbit@12345', color: 'text-emerald-400', dot: 'bg-emerald-400' },
+  { role: 'User',       email: 'user@newsorbit.com',   pass: 'NewsOrbit@12345', color: 'text-sky-400',     dot: 'bg-sky-400' },
 ]
 
 const FEATURES = [
@@ -26,20 +20,24 @@ const FEATURES = [
 ]
 
 export default function LoginPage({ onSuccess }: { onSuccess?: () => void }) {
-  const { login } = useAuth()
+  const { loginWithCredentials } = useAuth()
   const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
   const [showPass, setShowPass] = useState(false)
   const [error, setError]       = useState('')
+  const [loading, setLoading]   = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const cred = CREDENTIALS[email.toLowerCase()]
-    if (cred && cred.password === password) {
-      login(cred.role)
+    setError('')
+    setLoading(true)
+    try {
+      await loginWithCredentials(email.trim(), password)
       onSuccess?.()
-    } else {
-      setError('Invalid email or password. Please try again.')
+    } catch (err: any) {
+      setError(err.message ?? 'Invalid email or password. Please try again.')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -188,10 +186,11 @@ export default function LoginPage({ onSuccess }: { onSuccess?: () => void }) {
               <p className="rounded-xl bg-red-50 px-4 py-2.5 text-xs font-medium text-red-500 border border-red-100">{error}</p>
             )}
 
-            <button type="submit"
-              className="w-full rounded-2xl bg-sky-600 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-sky-500 active:scale-[0.98]"
+            <button type="submit" disabled={loading}
+              className="w-full rounded-2xl bg-sky-600 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-sky-500 active:scale-[0.98] disabled:opacity-60 flex items-center justify-center gap-2"
             >
-              Sign In to Your Account
+              {loading && <FiLoader className="h-4 w-4 animate-spin" />}
+              {loading ? 'Signing in…' : 'Sign In to Your Account'}
             </button>
           </form>
 

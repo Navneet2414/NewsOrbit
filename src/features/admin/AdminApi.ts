@@ -27,7 +27,7 @@ export interface AdminUser {
 export const AdminApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // Auth
-    adminLogin: builder.mutation<{ token: string; admin: AdminUser }, { email: string; password: string }>({
+    adminLogin: builder.mutation<{ success: boolean; token: string; data: AdminUser }, { email: string; password: string }>({
       query: (body) => ({ url: '/admin/login', method: 'POST', body }),
     }),
 

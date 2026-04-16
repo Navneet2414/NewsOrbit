@@ -10,7 +10,7 @@ export default function HomePage() {
         <div className="lg:col-span-2 lg:row-start-1"><Hero /></div>
         <div className="lg:col-start-1 lg:row-start-2">
           <div className="lg:hidden mb-8"><TrendingPanel /></div>
-          <NewsSection sidebarCategory="All News" />
+          <NewsSection />
         </div>
         <aside className="hidden lg:block lg:col-start-2 lg:row-start-2">
           <div className="sticky top-6"><TrendingPanel /></div>

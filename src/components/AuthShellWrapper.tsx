@@ -3,6 +3,7 @@
 import { ReactNode } from 'react'
 import { usePathname } from 'next/navigation'
 import { AuthProvider } from '../context/AuthContext'
+import { CategoryProvider } from '../context/CategoryContext'
 import AppShell from './AppShell'
 
 export default function AuthShellWrapper({ children }: { children: ReactNode }) {
@@ -11,7 +12,9 @@ export default function AuthShellWrapper({ children }: { children: ReactNode }) 
 
   return (
     <AuthProvider>
-      {isAuthPage ? children : <AppShell>{children}</AppShell>}
+      <CategoryProvider>
+        {isAuthPage ? children : <AppShell>{children}</AppShell>}
+      </CategoryProvider>
     </AuthProvider>
   )
 }

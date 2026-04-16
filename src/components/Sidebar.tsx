@@ -7,6 +7,7 @@ import {
 } from 'react-icons/fi'
 import Image from 'next/image'
 import { useAuth, Role } from '../context/AuthContext'
+import { useCategory } from '../context/CategoryContext'
 
 interface SidebarProps {
   activeItem: string
@@ -61,7 +62,13 @@ const roleBadge: Record<NonNullable<Role>, { label: string; color: string }> = {
 
 const Sidebar: React.FC<SidebarProps> = ({ activeItem, onSelect }) => {
   const { user, role, logout } = useAuth()
+  const { selected } = useCategory()
   const sections = SECTIONS_BY_ROLE[role ?? 'guest']
+
+  // On homepage, highlight the active category from context
+  const effectiveActive = (['Crime','Politics','Events','Jobs','All News'].includes(activeItem))
+    ? selected
+    : activeItem
 
   return (
     <aside className="hidden h-dvh w-72 flex-col border-r border-slate-800 bg-slate-950 text-slate-100 lg:flex">
@@ -87,26 +94,23 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, onSelect }) => {
             <div key={section.title}>
               <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.26em] text-slate-500">{section.title}</p>
               <ul className="space-y-2">
-                {section.items.map((item) => {
-                  const isActive = item === activeItem
-                  return (
+                {section.items.map((item) => (
                     <li key={item}>
                       <button type="button" onClick={() => onSelect(item)}
                         className={`group relative flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left text-sm font-medium outline-none transition focus-visible:ring-2 focus-visible:ring-sky-400/60 ${
-                          isActive ? 'bg-white/10 text-sky-200 ring-1 ring-white/10' : 'text-slate-200 hover:bg-white/5 hover:text-white'
+                          (item === effectiveActive) ? 'bg-white/10 text-sky-200 ring-1 ring-white/10' : 'text-slate-200 hover:bg-white/5 hover:text-white'
                         }`}
                       >
-                        {isActive && <span className="absolute left-0 top-1/2 h-7 w-1 -translate-y-1/2 rounded-r-full bg-sky-500" />}
+                        {(item === effectiveActive) && <span className="absolute left-0 top-1/2 h-7 w-1 -translate-y-1/2 rounded-r-full bg-sky-500" />}
                         <span className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border ${
-                          isActive ? 'border-sky-400/20 bg-sky-500/10 text-sky-300' : 'border-white/5 bg-white/5 text-slate-300 group-hover:border-white/10'
+                          (item === effectiveActive) ? 'border-sky-400/20 bg-sky-500/10 text-sky-300' : 'border-white/5 bg-white/5 text-slate-300 group-hover:border-white/10'
                         }`}>
                           {iconByItem[item] ?? <FiFileText className="h-5 w-5" />}
                         </span>
-                        <span className={isActive ? 'text-sky-200' : 'text-slate-100'}>{item}</span>
+                        <span className={item === effectiveActive ? 'text-sky-200' : 'text-slate-100'}>{item}</span>
                       </button>
                     </li>
-                  )
-                })}
+                  ))}
               </ul>
             </div>
           ))}
@@ -122,7 +126,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, onSelect }) => {
               <span className="block truncate text-sm font-semibold text-slate-100">{user.name}</span>
               <span className={`block truncate text-xs font-semibold ${roleBadge[role!].color}`}>{roleBadge[role!].label}</span>
             </div>
-            <button type="button" onClick={logout} title="Sign out"
+            <button type="button" onClick={() => logout()} title="Sign out"
               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-slate-400 transition hover:bg-white/10 hover:text-white">
               <FiLogOut className="h-4 w-4" />
             </button>
