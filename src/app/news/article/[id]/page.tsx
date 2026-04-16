@@ -102,6 +102,13 @@ function RelCard({ id, image, category, title, date, author }: {
   )
 }
 
+// Required for static export — actual data fetched client-side
+export function generateStaticParams() {
+  return []
+}
+
+export const dynamicParams = true
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default function ArticleDetailPage() {
   const { id } = useParams<{ id: string }>()
