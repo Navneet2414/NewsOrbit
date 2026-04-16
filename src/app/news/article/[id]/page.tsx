@@ -1,5 +1,8 @@
 'use client'
 
+// Static export: pre-render shell, data fetched client-side
+export const dynamic = 'force-static'
+
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
@@ -108,7 +111,6 @@ export function generateStaticParams() {
 }
 
 export const dynamicParams = true
-
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default function ArticleDetailPage() {
   const { id } = useParams<{ id: string }>()
