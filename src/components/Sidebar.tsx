@@ -3,7 +3,7 @@
 import {
   FiBookmark, FiBriefcase, FiCalendar, FiFileText, FiFlag,
   FiGrid, FiHome, FiLock, FiShield, FiTrendingUp, FiUser,
-  FiBell, FiUsers, FiLogOut, FiLogIn
+  FiBell, FiUsers, FiLogOut, FiLogIn,
 } from 'react-icons/fi'
 import Image from 'next/image'
 import { useAuth, Role } from '../context/AuthContext'
