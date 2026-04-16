@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { NewsItem } from '../types/news'
 import { FiClock, FiHeart, FiMessageCircle, FiShare2 } from 'react-icons/fi'
 
@@ -44,8 +45,9 @@ const NewsCard: React.FC<NewsCardProps> = ({ item }) => {
   }
 
   return (
-    <article className="group overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+    <Link href={`/news/article/${item.id}`} className="block group overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
       <div className="relative overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={item.image}
           alt={item.title}
@@ -55,13 +57,18 @@ const NewsCard: React.FC<NewsCardProps> = ({ item }) => {
       </div>
 
       <div className="space-y-4 p-5">
-        <div className="flex flex-wrap items-center gap-3">
-          <span className={`inline-flex items-center rounded-full px-4 py-1 text-xs font-semibold uppercase tracking-[0.24em] ring-1 ${accent.pill}`}>
-            {item.category}
-          </span>
-          <span className="inline-flex items-center gap-2 text-sm text-slate-500">
-            <FiClock className={`h-4 w-4 ${accent.icon}`} />
-            {item.timeLabel}
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-3">
+            <span className={`inline-flex items-center rounded-full px-4 py-1 text-xs font-semibold uppercase tracking-[0.24em] ring-1 ${accent.pill}`}>
+              {item.category}
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-xs text-slate-500">
+              <FiClock className={`h-3.5 w-3.5 ${accent.icon}`} />
+              {item.timeLabel}
+            </span>
+          </div>
+          <span className="text-xs font-bold uppercase tracking-widest text-slate-500">
+            {item.location}
           </span>
         </div>
 
@@ -90,7 +97,7 @@ const NewsCard: React.FC<NewsCardProps> = ({ item }) => {
           </div>
         </div>
       </div>
-    </article>
+    </Link>
   )
 }
 

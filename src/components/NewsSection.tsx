@@ -1,29 +1,25 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import CategoryTabs from './CategoryTabs'
 import FeaturedNews from './FeaturedNews'
 
-const categoryItems = ['Crime', 'Politics', 'Events', 'Jobs']
-
-interface NewsSectionProps {
-  sidebarCategory: string
+const PATH_TO_CATEGORY: Record<string, string> = {
+  '/':               'All News',
+  '/news/crime':     'Crime',
+  '/news/politics':  'Politics',
+  '/news/events':    'Events',
+  '/news/jobs':      'Jobs',
 }
 
-const NewsSection: React.FC<NewsSectionProps> = ({ sidebarCategory }) => {
-  // If sidebar clicked a category, use it; otherwise default to All News
-  const initial = categoryItems.includes(sidebarCategory) ? sidebarCategory : 'All News'
-  const [selectedCategory, setSelectedCategory] = useState(initial)
-
-  // Sync when sidebar selection changes
-  useEffect(() => {
-    setSelectedCategory(categoryItems.includes(sidebarCategory) ? sidebarCategory : 'All News')
-  }, [sidebarCategory])
+const NewsSection: React.FC = () => {
+  const pathname = usePathname()
+  const category = PATH_TO_CATEGORY[pathname] ?? 'All News'
 
   return (
     <div className="space-y-8">
-      <CategoryTabs selected={selectedCategory} onSelect={setSelectedCategory} />
-      <FeaturedNews selectedCategory={selectedCategory} />
+      <CategoryTabs />
+      <FeaturedNews selectedCategory={category} />
     </div>
   )
 }
