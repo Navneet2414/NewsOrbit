@@ -118,6 +118,7 @@ function PostCard({ post }: { post: UserPost }) {
     <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
       {/* Image */}
       <div className="relative">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={post.image}
           alt={post.title}

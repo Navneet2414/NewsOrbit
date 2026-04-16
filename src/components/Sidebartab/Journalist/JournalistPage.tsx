@@ -107,6 +107,7 @@ const JournalistPage: React.FC = () => {
               <div className="px-5 pb-5">
                 {/* Avatar row */}
                 <div className="flex items-end justify-between -mt-8 mb-3">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={j.avatar}
                     alt={j.name}

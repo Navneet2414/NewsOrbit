@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import LoginPage from '../../Pages/Auth/LoginPage'
+import LoginPage from '../../screens/Auth/LoginPage'
 
 export default function Login() {
   const router = useRouter()

@@ -14,6 +14,7 @@ export default function JournalistProfile() {
         <div className="bg-white border border-gray-200 rounded-2xl px-6 py-5 mb-6">
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-4">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80" alt="Priya Sharma" className="w-16 h-16 rounded-full object-cover flex-shrink-0" />
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Priya Sharma</h1>
@@ -37,6 +38,7 @@ export default function JournalistProfile() {
           {posts.map((post) => (
             <div key={post.id} className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
               <div className="relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={post.image} alt={post.title} className="w-full h-[220px] object-cover" />
                 {post.trending && (
                   <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm text-white text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full">

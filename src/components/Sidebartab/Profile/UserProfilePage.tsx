@@ -37,14 +37,15 @@ const UserProfilePage: React.FC = () => {
         {/* Cover */}
         <div className="h-28 bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-500" />
 
-        <div className="px-6 pb-6">
-          {/* Avatar + Edit */}
-          <div className="flex items-end justify-between -mt-10 mb-4">
-            <img
-              src={user.avatar}
-              alt={user.name}
-              className="h-20 w-20 rounded-[20px] border-4 border-white object-cover shadow-md"
-            />
+          <div className="px-6 pb-6">
+            {/* Avatar + Edit */}
+            <div className="flex items-end justify-between -mt-10 mb-4">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={user.avatar}
+                alt={user.name}
+                className="h-20 w-20 rounded-[20px] border-4 border-white object-cover shadow-md"
+              />
             <button
               type="button"
               className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"

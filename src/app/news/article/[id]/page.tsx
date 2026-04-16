@@ -91,6 +91,7 @@ function RelCard({ id, image, category, title, date, author }: {
   return (
     <Link href={`/news/article/${id}`}
       className="group flex gap-3 rounded-xl border border-slate-100 bg-slate-50 p-2.5 transition hover:border-slate-200 hover:bg-white hover:shadow-sm">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={image} alt={title} className="h-14 w-[72px] shrink-0 rounded-lg object-cover" />
       <div className="min-w-0">
         <span className={`inline-block mb-1 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest ring-1 ${a.pill}`}>{category}</span>
@@ -111,7 +112,6 @@ export default function ArticleDetailPage() {
     { page: 1, limit: 20, category: article?.category },
     { skip: !article?.category }
   )
-  const allNews = catPage?.data ?? []
 
   const [toc, setToc]           = useState<H[]>([])
   const [active, setActive]     = useState('')
@@ -137,7 +137,10 @@ export default function ArticleDetailPage() {
     return () => obs.disconnect()
   }, [toc])
 
-  const related = useMemo(() => allNews.filter((n) => n._id !== id).slice(0, 6), [allNews, id])
+  const related = useMemo(() => {
+    const allNews = catPage?.data ?? []
+    return allNews.filter((n) => n._id !== id).slice(0, 6)
+  }, [catPage?.data, id])
   const ac = ACCENT[article?.category ?? ''] ?? DA
 
   const copy = () => {
@@ -202,6 +205,7 @@ export default function ArticleDetailPage() {
 
             {/* Hero */}
             <div className="relative mb-8 overflow-hidden rounded-[28px] shadow-xl">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={article.image || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80'}
                 alt={article.title}

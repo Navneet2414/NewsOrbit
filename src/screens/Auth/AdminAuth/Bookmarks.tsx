@@ -85,7 +85,7 @@ export default function BookmarksPage() {
         </div>
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Bookmarks</h1>
-          <p className="text-gray-500 text-sm mt-0.5">Articles you've saved for later.</p>
+          <p className="text-gray-500 text-sm mt-0.5">Articles you&apos;ve saved for later.</p>
         </div>
       </div>
 
@@ -104,6 +104,7 @@ function BookmarkCard({ post }: { post: BookmarkedPost }) {
     <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-md transition-shadow cursor-pointer">
       {/* Image */}
       <div className="relative">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={post.image}
           alt={post.title}

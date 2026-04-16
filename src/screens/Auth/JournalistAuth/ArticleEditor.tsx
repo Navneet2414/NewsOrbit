@@ -4,10 +4,11 @@ import { useState, useRef, useCallback, DragEvent, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { FiX, FiImage, FiMapPin, FiTag, FiSend, FiUpload, FiLoader } from 'react-icons/fi'
 import 'react-quill-new/dist/quill.snow.css'
+import type ReactQuillNew from 'react-quill-new'
 import { useUploadImageMutation } from '../../../features/journalist/JournalistApi'
 import type { JournalistArticle } from '../../../features/journalist/JournalistApi'
 
-const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false })
+const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false }) as unknown as typeof ReactQuillNew
 
 const CATEGORIES = ['Crime', 'Politics', 'Events', 'Jobs']
 const LOCATIONS  = ['Mumbai', 'Delhi', 'Bengaluru', 'Chennai', 'Hyderabad', 'Kolkata', 'Pune', 'Jaipur', 'Ahmedabad', 'Surat']
@@ -23,6 +24,16 @@ const TOOLBAR = [
   ['link', 'image', 'video'],
   ['clean'],
 ]
+
+type QuillRange = { index: number }
+type QuillToolbarModule = { addHandler: (name: 'image', handler: () => void) => void }
+type QuillEditor = {
+  getModule: (name: 'toolbar') => QuillToolbarModule
+  getLength: () => number
+  getSelection: (focus?: boolean) => QuillRange | null
+  insertEmbed: (index: number, type: 'image', value: string) => void
+  setSelection: (index: number) => void
+}
 
 export interface ArticlePayload {
   title: string
@@ -52,25 +63,25 @@ export default function ArticleEditor({ onClose, onPublish, editData }: Props) {
   const [content, setContent]       = useState(editData?.content ?? '')
   const [errors, setErrors]         = useState<Record<string, string>>({})
   const fileRef = useRef<HTMLInputElement>(null)
-  const quillRef = useRef<any>(null)
+  const quillRef = useRef<ReactQuillNew | null>(null)
 
   const [uploadImage] = useUploadImageMutation()
 
-  const fileToBase64 = (file: File): Promise<string> =>
+  const fileToBase64 = useCallback((file: File): Promise<string> => (
     new Promise((resolve, reject) => {
       const reader = new FileReader()
       reader.onload = () => resolve((reader.result as string).split(',')[1])
-      reader.onerror = reject
+      reader.onerror = () => reject(new Error('File read failed'))
       reader.readAsDataURL(file)
     })
+  ), [])
 
-  const uploadToImageKit = async (file: File, folder = 'newsorbit/covers') => {
+  const uploadToImageKit = useCallback(async (file: File, folder = 'newsorbit/covers') => {
     const base64 = await fileToBase64(file)
-    const res = await uploadImage({ base64, fileName: file.name, folder }).unwrap()
-    return res
-  }
+    return uploadImage({ base64, fileName: file.name, folder }).unwrap()
+  }, [fileToBase64, uploadImage])
 
-  const handleCoverFile = async (file: File) => {
+  const handleCoverFile = useCallback(async (file: File) => {
     if (!file.type.startsWith('image/')) return
     setCoverUploading(true)
     try {
@@ -82,7 +93,7 @@ export default function ArticleEditor({ onClose, onPublish, editData }: Props) {
     } finally {
       setCoverUploading(false)
     }
-  }
+  }, [uploadToImageKit])
 
   const onDragOver  = useCallback((e: DragEvent) => { e.preventDefault(); setIsDragging(true) }, [])
   const onDragLeave = useCallback(() => setIsDragging(false), [])
@@ -90,11 +101,11 @@ export default function ArticleEditor({ onClose, onPublish, editData }: Props) {
     e.preventDefault(); setIsDragging(false)
     const f = e.dataTransfer.files?.[0]
     if (f) handleCoverFile(f)
-  }, [])
+  }, [handleCoverFile])
 
   // Intercept Quill image handler — upload to ImageKit, insert URL not base64
   useEffect(() => {
-    const quill = quillRef.current?.getEditor?.()
+    const quill = quillRef.current?.getEditor?.() as unknown as QuillEditor | undefined
     if (!quill) return
     const toolbar = quill.getModule('toolbar')
     toolbar.addHandler('image', () => {
@@ -111,15 +122,16 @@ export default function ArticleEditor({ onClose, onPublish, editData }: Props) {
             folder: 'newsorbit/content',
           }).unwrap()
           const range = quill.getSelection(true)
-          quill.insertEmbed(range.index, 'image', res.url)
-          quill.setSelection(range.index + 1)
+          const index = range?.index ?? Math.max(quill.getLength() - 1, 0)
+          quill.insertEmbed(index, 'image', res.url)
+          quill.setSelection(index + 1)
         } catch {
           alert('Inline image upload failed.')
         }
       }
       input.click()
     })
-  }, [quillRef.current])
+  }, [fileToBase64, uploadImage])
 
   const validate = () => {
     const e: Record<string, string> = {}
@@ -188,6 +200,7 @@ export default function ArticleEditor({ onClose, onPublish, editData }: Props) {
               </label>
               {coverImage ? (
                 <div className="relative overflow-hidden rounded-2xl">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={coverImage} alt="Cover" className="h-56 w-full object-cover" />
                   <button onClick={() => { setCoverImage(''); setCoverFileId('') }}
                     className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70">

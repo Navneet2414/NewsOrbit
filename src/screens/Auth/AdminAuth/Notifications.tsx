@@ -6,7 +6,8 @@ import {
   ShieldCheck, 
   Newspaper, 
   UserPlus, 
-  XCircle 
+  XCircle,
+  type LucideIcon,
 } from 'lucide-react';
 
 
@@ -64,7 +65,7 @@ const notifications: NotificationItem[] = [
   },
 ];
 
-const IconMap: Record<string, any> = {
+const IconMap: Record<NotificationType, LucideIcon> = {
   comment: MessageSquare,
   like: Heart,
   approval: ShieldCheck,

@@ -12,12 +12,15 @@ const DEMO = [
   { role: 'User',       email: 'user@newsorbit.com',   pass: 'NewsOrbit@12345', color: 'text-sky-400',     dot: 'bg-sky-400' },
 ]
 
+// Kept for future use in the (currently commented) feature list UI.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const FEATURES = [
   { icon: '📰', text: 'Breaking local news, delivered instantly' },
   { icon: '🔒', text: 'Secure, role-based access for every user' },
   { icon: '🌆', text: 'Hyperlocal coverage across every city' },
   { icon: '⚡', text: 'Real-time trending stories & live updates' },
 ]
+void FEATURES
 
 export default function LoginPage({ onSuccess }: { onSuccess?: () => void }) {
   const { loginWithCredentials } = useAuth()
@@ -34,8 +37,15 @@ export default function LoginPage({ onSuccess }: { onSuccess?: () => void }) {
     try {
       await loginWithCredentials(email.trim(), password)
       onSuccess?.()
-    } catch (err: any) {
-      setError(err.message ?? 'Invalid email or password. Please try again.')
+    } catch (err: unknown) {
+      const fallback = 'Invalid email or password. Please try again.'
+      if (err instanceof Error) setError(err.message || fallback)
+      else if (typeof err === 'string') setError(err || fallback)
+      else if (err && typeof err === 'object' && 'message' in err && typeof (err as { message: unknown }).message === 'string') {
+        setError((err as { message: string }).message || fallback)
+      } else {
+        setError(fallback)
+      }
     } finally {
       setLoading(false)
     }
@@ -77,7 +87,7 @@ export default function LoginPage({ onSuccess }: { onSuccess?: () => void }) {
           {/* Tagline */}
           <div className="space-y-3 max-w-sm">
             <h2 className="text-2xl font-bold leading-snug text-white">
-              India's Most Trusted<br />
+              India&apos;s Most Trusted<br />
               <span className="text-sky-400">Hyperlocal News Network</span>
             </h2>
             <p className="text-sm leading-7 text-slate-400">
@@ -195,7 +205,7 @@ export default function LoginPage({ onSuccess }: { onSuccess?: () => void }) {
           </form>
 
           <p className="mt-6 text-center text-xs text-slate-400">
-            By signing in, you agree to NewsOrbit's{' '}
+            By signing in, you agree to NewsOrbit&apos;s{' '}
             <span className="cursor-pointer text-sky-500 hover:underline">Terms of Service</span>{' '}
             and{' '}
             <span className="cursor-pointer text-sky-500 hover:underline">Privacy Policy</span>.

@@ -20,7 +20,7 @@ const ProtectedRoute = ({ allowedRoles, children }: ProtectedRouteProps) => {
         </div>
         <h2 className="text-2xl font-bold text-gray-900">Access Denied</h2>
         <p className="max-w-sm text-sm text-gray-500">
-          You don't have permission to view this page.
+          You don&apos;t have permission to view this page.
           {!role && ' Please sign in to continue.'}
         </p>
         <p className="rounded-full bg-slate-100 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-slate-500">

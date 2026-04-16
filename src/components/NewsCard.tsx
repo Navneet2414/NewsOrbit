@@ -47,6 +47,7 @@ const NewsCard: React.FC<NewsCardProps> = ({ item }) => {
   return (
     <Link href={`/news/article/${item.id}`} className="block group overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
       <div className="relative overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={item.image}
           alt={item.title}

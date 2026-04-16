@@ -65,6 +65,7 @@ const FeaturedNews: React.FC<FeaturedNewsProps> = ({ selectedCategory }) => {
       {/* Featured hero card — only show on page 1 */}
       {page === 1 && (
         <Link href={`/news/article/${featured._id}`} className="block relative overflow-hidden rounded-[32px] shadow-2xl cursor-pointer group">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={featured.image || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1400&q=80'}
             alt={featured.title}
@@ -84,7 +85,7 @@ const FeaturedNews: React.FC<FeaturedNewsProps> = ({ selectedCategory }) => {
             <div className="space-y-3">
               <div className="flex flex-wrap items-center gap-3 text-sm">
                 <span className="font-semibold uppercase tracking-[0.2em] text-sky-400">{featured.category}</span>
-                <span className="text-white/60">{featured.location}</span>
+                <span className="text-white/60">{featured.city}</span>
                 <span className="text-white/40">·</span>
                 <span className="text-white/60">{publishedDate}</span>
               </div>

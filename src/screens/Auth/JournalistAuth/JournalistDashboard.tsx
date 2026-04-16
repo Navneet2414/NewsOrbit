@@ -39,10 +39,10 @@ export default function JournalistDashboard() {
   const [activeTab, setActiveTab]   = useState<Tab>("Overview");
   const [showEditor, setShowEditor] = useState(false);
   const [editTarget, setEditTarget] = useState<JournalistArticle | null>(null);
-
+ 
   const { data: articles = [], isLoading } = useGetMyArticlesQuery();
-  const [createArticle, { isLoading: creating }] = useCreateArticleMutation();
-  const [updateArticle, { isLoading: updating }] = useUpdateArticleMutation();
+  const [createArticle] = useCreateArticleMutation();
+  const [updateArticle] = useUpdateArticleMutation();
 
   const handlePublish = async (payload: ArticlePayload) => {
     if (editTarget) {

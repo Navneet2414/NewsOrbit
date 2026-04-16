@@ -3,7 +3,7 @@
 import {
   FiBookmark, FiBriefcase, FiCalendar, FiFileText, FiFlag,
   FiGrid, FiHome, FiLock, FiShield, FiTrendingUp, FiUser,
-  FiBell, FiUsers, FiEdit, FiLogOut, FiLogIn
+  FiBell, FiUsers, FiLogOut, FiLogIn
 } from 'react-icons/fi'
 import Image from 'next/image'
 import { useAuth, Role } from '../context/AuthContext'
@@ -121,6 +121,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, onSelect }) => {
       <div className="border-t border-white/5 px-6 py-5">
         {user ? (
           <div className="flex items-center gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={user.avatar} alt={user.name} className="h-10 w-10 shrink-0 rounded-2xl object-cover" />
             <div className="min-w-0 flex-1">
               <span className="block truncate text-sm font-semibold text-slate-100">{user.name}</span>

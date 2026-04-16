@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { FiClock, FiEye, FiHeart, FiTrendingUp, FiZap, FiMessageCircle } from 'react-icons/fi'
-import { useGetPublicNewsQuery, dbNewsToNewsItem, DBNewsItem } from '../../features/news/NewsApi'
+import { useGetPublicNewsQuery, DBNewsItem } from '../../features/news/NewsApi'
 
 const accentByCategory: Record<string, string> = {
   Jobs:     'bg-emerald-50 text-emerald-700 ring-emerald-200',
@@ -24,13 +24,13 @@ const SkeletonCard = () => (
 
 const DBNewsCard = ({ item }: { item: DBNewsItem }) => {
   const accent = accentByCategory[item.category] ?? 'bg-slate-50 text-slate-700 ring-slate-200'
-  const authorName = typeof item.authorId === 'object' ? item.authorId.name : 'NewsOrbit'
   const timeLabel = new Date(item.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })
 
   return (
     <Link href={`/news/article/${item._id}`}
       className="group cursor-pointer overflow-hidden rounded-[24px] bg-white shadow-md transition hover:-translate-y-1 hover:shadow-xl block">
       <div className="overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={item.image || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80'}
           alt={item.title}
@@ -85,7 +85,7 @@ const TrendingPage: React.FC = () => {
         </div>
         <div className="mb-5 flex items-center gap-2 pl-1">
           <FiZap className="h-4 w-4 shrink-0 text-orange-400" />
-          <p className="text-sm font-medium text-slate-500">Hot Right Now — stories everyone's talking about.</p>
+          <p className="text-sm font-medium text-slate-500">Hot Right Now — stories everyone&apos;s talking about.</p>
         </div>
         {isLoading ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
